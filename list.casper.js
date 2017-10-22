@@ -3,7 +3,7 @@
  */
 // Այս կոդը browser-ի ավտոմատացման օրինակ է, որը իրականացնում է հայտարարության ավտոմատացված ավելացում list.am կայքում
 // Ամեն էջում կատարած գործողություններից հետո արվում է screenshot, որը պահվում է list.am դիրեկտորիայում
-let casper      = require('casper').create(),
+var casper      = require('casper').create(),
     login       = 'https://www.list.am/login',
     my          = 'https://www.list.am/my',
     email       = 'your_email@gmail.com', // your email address (registration email)

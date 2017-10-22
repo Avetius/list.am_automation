@@ -1,0 +1,29 @@
+{
+  "name": "list.am_automation",
+  "version": "1.0.0",
+  "description": "Այս կոդը browser-ի ավտոմատացման օրինակ է, որը իրականացնում է հայտարարության ավտոմատացված ավելացում list.am կայքում Ամեն էջում կատարած գործողություններից հետո արվում է screenshot, որը պահվում է list.am դիրեկտորիայում",
+  "main": "list.casper.js",
+  "scripts": {
+    "start": "node_modules/casperjs/bin/casperjs list.casper.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Avetius/list.am_automation.git"
+  },
+  "keywords": [
+    "list.am",
+    "browser",
+    "automation",
+    "automated",
+    "task"
+  ],
+  "author": "avet.sargsyan@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Avetius/list.am_automation/issues"
+  },
+  "homepage": "https://github.com/Avetius/list.am_automation#readme",
+  "dependencies": {
+    "casperjs": "^1.1.4"
+  }
+}
