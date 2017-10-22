@@ -4,16 +4,16 @@
 // Այս կոդը browser-ի ավտոմատացման օրինակ է, որը իրականացնում է հայտարարության ավտոմատացված ավելացում list.am կայքում
 // Ամեն էջում կատարած գործողություններից հետո արվում է screenshot, որը պահվում է list.am դիրեկտորիայում
 var casper      = require('casper').create(),
+    email       = require('./config').email,
+    password    = require('./config').password, // your password
+    yourName    = require('./config').yourName, // your name
+    annTitle    = require('./config').annTitle, // title of announcement
+    annDesc     = require('./config').annDesc, // description of announcement
+    annPhone1   = require('./config').annPhone1, // contact phones
+    annPhone2   = require('./config').annPhone2,
+    annPhone3   = require('./config').annPhone3,
     login       = 'https://www.list.am/login',
     my          = 'https://www.list.am/my',
-    email       = 'your_email@gmail.com', // your email address (registration email)
-    password    = 'your_password', // your password
-    yourName    = 'your_name', // your name
-    annTitle    = 'your_announcement_title', // title of announcement
-    annDesc     = 'your_announcement_description', // description of announcement
-    annPhone1   = 'your_contact_phone', // contact phones
-    annPhone2   = '',
-    annPhone3   = '',
     startTime   = Date.now();
 
 casper.start(login, function() { // entering Login page
