@@ -3,7 +3,12 @@
  */
 // Այս կոդը browser-ի ավտոմատացման օրինակ է, որը իրականացնում է հայտարարության ավտոմատացված ավելացում list.am կայքում
 // Ամեն էջում կատարած գործողություններից հետո արվում է screenshot, որը պահվում է list.am դիրեկտորիայում
-var casper      = require('casper').create(),
+var casper      = require('casper').create({
+        verbose: false,
+        logLevel: 'debug',
+        userAgent: 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:56.0) Gecko/20100101 Firefox/56.0',
+        pageSettings: {}
+    }),
     email       = require('./config').email,
     password    = require('./config').password, // your password
     yourName    = require('./config').yourName, // your name
@@ -29,52 +34,44 @@ casper.then(function() {
 });
 
 casper.then(function() {
-    casper.capture('list.am/myPage.png');
-    this.waitForSelector("a[href='/add']", // wait for a href=/add link to appear
+    this.waitForSelector("a[href='/add']", // wait for a href=/add link to appear a[href='/add']
         function pass () {
             casper.click("a[href='/add']");
             this.echo("adding announcement...");
         },
-        10000 // timeout limit in milliseconds
-    );
-});
-
-casper.then(function(){
-    this.echo("announcement page opened");
-    casper.capture('list.am/announcement.png');
-    this.waitForSelector('a[onclick="return padc.show(this,1,\'Services\')"]',
-        function pass () {
-            this.echo('waiting for service button');
-            casper.click('a[onclick="return padc.show(this,1,\'Services\')"]');
-            casper.capture('list.am/announcementType.png');
-            casper.click("a[href='/add/162']");
+        function fail(){
+            this.echo("Something went wrong");
+            this.exit();
         },
-        10000
+        20000 // timeout limit in milliseconds
     );
-    this.echo("link to services appeared...");
-    casper.capture('list.am/addAnnFinished.png');
+    casper.capture('list.am/myPage.png');
 });
 
-casper.then(function(){
+casper.thenOpen('https://www.list.am/add/162', function(){
     this.echo("announcement page opened");
     casper.capture('list.am/announcementDetails.png');
-    this.waitForSelector('select#_idlocation',
+    this.waitForSelector('input#_idtitle',
         function pass () {
             this.evaluate(function() {
                 var form = document.querySelector('select#_idlocation'); // select select option index 7
                 form.selectedIndex = 7;
                 $(form).change();
             });
-            this.sendKeys('input[name="title"]', annTitle);
-            this.sendKeys('textarea[name="description"]', annDesc);
-            if(casper.exists('input[name="your_name"]')){
-                this.sendKeys('input[name="your_name"]', yourName);
+            this.sendKeys('input#_idtitle', annTitle);
+            this.sendKeys('textarea#_iddescription', annDesc);
+            if(casper.exists('input#_idyour_name')){
+                this.sendKeys('input#_idyour_name', yourName);
             }
-            this.sendKeys('input[name="phone_1"]', annPhone1);
-            this.sendKeys('input[name="phone_2"]', annPhone2);
-            this.sendKeys('input[name="phone_3"]', annPhone3);
+            this.sendKeys('input#_idphone_1', annPhone1);
+            this.sendKeys('input#_idphone_2', annPhone2);
+            this.sendKeys('input#_idphone_3', annPhone3);
             casper.capture('list.am/announcementFilled.png');
-            casper.click('input[name="_form_action0"]');
+            casper.click('input#postaction__form_action0');
+        },
+        function fail(){
+            this.echo("Something went wrong");
+            this.exit();
         },
         10000
     );
@@ -82,7 +79,6 @@ casper.then(function(){
 
 casper.then(function() {
     this.echo("waiting for errors..");
-    casper.capture('list.am/waitingForErrors.png');
     this.waitForSelector('div.error',
         function pass () {
             this.echo("Error On Publish...");
@@ -94,24 +90,25 @@ casper.then(function() {
         function fail () {
             this.echo("Published with no errors :)")
         },
-        5000
+        20000
     );
+    casper.capture('list.am/waitingForErrors.png');
 });
 
 casper.then(function() {
     this.echo("publish page opened");
-    casper.capture('list.am/PublishReview.png');
     this.waitForSelector('input[name="_form_action1"]',
         function pass () {
             this.echo('Success!!! Time elapsed = '+ (Date.now() - startTime)+' ms');
             casper.click('input[name="_form_action1"]');
         },
-        function fail () {
-            this.echo("Failed...");
+        function fail(){
+            this.echo("Something went wrong");
             this.exit();
         },
-        3000
+        20000
     );
+    casper.capture('list.am/PublishReview.png');
 });
 
 casper.run(function() {
